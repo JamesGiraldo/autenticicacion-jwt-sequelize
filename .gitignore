@@ -1,0 +1,12 @@
+node_modules/
+.env
+
+public/uploads/**.jpg
+public/uploads/**.png
+public/uploads/**.gif
+public/uploads/**.jpeg
+
+uploads/**.jpg
+uploads/**.png
+uploads/**.gif
+uploads/**.jpeg
