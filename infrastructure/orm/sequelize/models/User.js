@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
-const TABLA = require('../../../../config/tablas');
+const { TABLA, MODELS }  = require('../../../../config/tablas');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      this.hasMany( models[TABLA.posts], { foreignKey: "userId" } );
+
+      this.belongsToMany( models[TABLA.roles], { as: TABLA.roles, through:  TABLA.user_role, foreignKey: "user_id" } );
     }
   };
   User.init({

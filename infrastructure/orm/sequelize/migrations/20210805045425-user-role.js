@@ -4,25 +4,29 @@ const { TABLA, MODELS }  = require('../../../../config/tablas');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable( TABLA.users , {
+    
+    await queryInterface.createTable( TABLA.user_role , { 
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nombre: {
-        type: Sequelize.STRING,
+      user_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: TABLA.users,
+          key: 'id'
+        }    
       },
-      password: {
-        type: Sequelize.STRING,
+      role_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        unque: true,
-        allowNull: false,
+        references: {
+          model: TABLA.roles,
+          key: 'id'
+        }    
       },
       createdAt: {
         allowNull: false,
@@ -33,8 +37,12 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+     
   },
+
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable( TABLA.users );
+
+    await queryInterface.dropTable( TABLA.user_role );
+  
   }
 };

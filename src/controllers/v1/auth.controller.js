@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const models = require("../../../infrastructure/orm/sequelize/models");
-const TABLA = require("../../../config/tablas");
+const { TABLA, MODELS } = require("../../../config/tablas");
 
 const { generarJWT } = require("../../helpers/jwt");
 
@@ -27,7 +27,7 @@ const signUp = async (req, res = response) => {
           .then(async (user) => {
 
             /** Generar El TOKEN JWT */
-            const token = await generarJWT(user);
+            const token = await generarJWT( user );
 
             res.status(201).json({
               ok: true,
@@ -38,7 +38,7 @@ const signUp = async (req, res = response) => {
           }).catch((error) => {
             res.status(400).json({
               ok: false,
-              message: "Error al registrar usuario.",
+              message: "Problemas al registrarse.",
               error: error,
             });
           });
@@ -50,10 +50,8 @@ const singIn = async (req, res = response) => {
   /** para obtener los valores del body */
   const campos = { email, password } = req.body;
 
-  await models[TABLA.users]
-    .findOne({ where: { email: campos.email } })
-    .then((user) => {
-      if (user == null && !user) {
+  await models[TABLA.users].findOne({ where: { email: campos.email } }).then( user => {
+      if ( !user ) {
         res.status(401).json({
           ok: false,
           message: "Credenciales invalidas",
