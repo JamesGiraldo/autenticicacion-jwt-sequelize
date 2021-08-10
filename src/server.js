@@ -14,5 +14,7 @@ serve.listen( process.env.PORT, async () => {
 
     connection.authenticate().then( () => {        
         console.log(`Conexion a la base de datos exitosa`.yellow);            
-    })
+    }).catch( (err) => {
+        console.log(`Error al conectar a la base de datos: `.red );
+    });
 });
