@@ -1,7 +1,8 @@
 const { response } = require("express");
 
-const models = require("../../../infrastructure/orm/sequelize/models");
-const { TABLA, MODELS } = require("../../../config/tablas");
+const models = require("../../../../infrastructure/orm/sequelize/models");
+const { TABLA } = require("../../../../config/tablas");
+const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
 
 // campos para que no se vean en respuesta
 const composNoVisible = ["password", "createdAt", "updatedAt"];
@@ -14,17 +15,10 @@ const index = async (req, res = response) => {
       include: TABLA.roles,
     })
     .then((users) => {
-      res.status(201).json({
-        ok: true,
-        [TABLA.users]: users,
-        total: users.length,
-      });
+        res.status( HTTP_CODE.SUCCESS ).json( users );
     })
     .catch((err) => {
-      res.status(400).json({
-        ok: false,
-        error: err,
-      });
+      res.status( HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR, err );
     });
 };
 
@@ -40,26 +34,15 @@ const show = async (req, res = response) => {
     })
     .then((user) => {
       if (user) {
-        res.status(200).json({
-          ok: true,
-          message: "Usuario encontrado",
-          user: user,
-        });
+        res.status( HTTP_CODE.SUCCESS ).json( user );
       } else {
         /** Si no recibe la respuesta. */
-        res.status(404).json({
-          ok: false,
-          message: "Usuario no encontrado.",
-        });
+        res.status( HTTP_CODE.NOT_FOUND ).json( HTTP_MESSAGE.USER_NOT_FOUND_BY_ID );
       }
     })
     .catch((error) => {
       /** Si lapetición esta mal mostrar el error. */
-      res.status(500).json({
-        ok: false,
-        message: "Algo salió mal en la peticion.",
-        error: error,
-      });
+      res.status( HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR, error );
     });
 };
 
@@ -76,28 +59,17 @@ const update = async (req, res = response) => {
       if (user) {
       
         await user.update( campos, { where: { id: user.id } } ).then( result =>  { 
-          res.status(200).json({
-            ok: true,
-            message: 'Usuario actualizado correctamente',
-            [TABLA.users]: user,
-          });
+          res.status( HTTP_CODE.SUCCESS ).json( user );
         })
 
       } else {
         /** Si no recibe la respuesta. */
-        res.status(404).json({
-          ok: false,
-          message: "Usuario no encontrado.",
-        });
+        res.status( HTTP_CODE.NOT_FOUND ).json( HTTP_MESSAGE.USER_NOT_FOUND_BY_ID );
       }
     })
     .catch((error) => {
       /** Si lapetición esta mal mostrar el error. */
-      res.status(500).json({
-        ok: false,
-        message: "Algo salió mal en la peticion.",
-        error: error,
-      });
+      res.status(HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR, error );
     });
 };
 
@@ -111,26 +83,16 @@ const destroy = async (req, res = response) => {
     if (post) {
 
       await user.destroy( { where: { id: user.id } } ).then( result =>  { 
-        res.status(200).json({
-          ok: true,
-          message: 'Usuario eliminado correctamente',          
-        });
+        res.status( HTTP_CODE.SUCCESS ).json( HTTP_MESSAGE.SUCCESS );
       })
 
     } else {
       /** Si no recibe la respuesta. */
-      res.status(404).json({
-        ok: false,
-        message: 'Ususario no encontrado.',
-      });
+      res.status( HTTP_CODE.NOT_FOUND ).json( HTTP_MESSAGE.USER_NOT_FOUND_BY_ID );
     }
   }).catch(error => {
     /** Si lapetición esta mal mostrar el error. */
-    res.status(500).json({
-      ok: false,
-      message: 'Algo salió mal en la peticion',
-      error: error
-    });
+    res.status(  HTTP_CODE.NOT_FOUND ).json( HTTP_MESSAGE.USER_NOT_FOUND_BY_ID );
   })
 
 };

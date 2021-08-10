@@ -2,9 +2,9 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const router = Router();
 /** metodos importados del controller presente */
-const { index, show, update, destroy } = require('../../controllers/v1/users.controller');
+const { index, show, update, destroy } = require('../controller/users.controller');
 /** valdiacioneciones con el middleware */
-const  { checkAuth }  = require('../../middleware/auth');
+const  { checkAuth }  = require('../../../middleware/auth');
 
 
 /** ruta principal metodo get */
