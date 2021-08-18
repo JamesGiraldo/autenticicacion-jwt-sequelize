@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany( models[TABLA.posts], { foreignKey: "userId" } );
 
       this.belongsToMany( models[TABLA.roles], { as: TABLA.roles, through:  TABLA.user_role, foreignKey: "user_id" } );
+
+      this.belongsToMany( models[TABLA.cursos], { as: TABLA.cursos, through:  TABLA.user_curso, foreignKey: "user_id" } );
     }
   };
   User.init({
@@ -25,6 +27,26 @@ module.exports = (sequelize, DataTypes) => {
         len: {
           args: [ 3, 255 ],
           msg: "El nombre tiene que ser minimo de 3 caracteres."
+        }
+      }
+    },
+    apellido: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {       
+        len: {
+          args: [ 3, 255 ],
+          msg: "El apellido tiene que ser minimo de 3 caracteres."
+        }
+      }
+    },
+    edad: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: {
+          args: false,
+          msg: "La edad debe ser un número entero."
         }
       }
     },

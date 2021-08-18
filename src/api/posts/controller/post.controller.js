@@ -40,9 +40,9 @@ const create = async (req, res = response) => {
 // UPDATE /api/posts
 const update = async (req, res = response) => {
   /** obtener el valor del body  */
-  const cuerpoUpdate = { ...req.post.body };
+  const cuerpoUpdate = { ...req.body };
   await req.post.update(cuerpoUpdate, { where: { id: req.post.id } }).then( () => {
-    res.status( HTTP_CODE.SUCCESS ).json( HTTP_MESSAGE.SUCCESS, req.post );
+    res.status( HTTP_CODE.SUCCESS ).json( req.post );
   })
 };
 

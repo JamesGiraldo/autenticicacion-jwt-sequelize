@@ -2,14 +2,14 @@ const { response } = require("express");
 const bcrypt = require("bcryptjs");
 
 const models = require("../../../../infrastructure/orm/sequelize/models");
-const { TABLA, MODELS } = require("../../../../config/tablas");
+const { TABLA } = require("../../../../config/tablas");
 
 const { generarJWT } = require("../../../helpers/jwt");
 const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
 
 const singIn = async (req, res = response) => {
   /** para obtener los valores del body */
-  const campos = ({ email, password } = req.body);
+  const campos = { email, password } = req.body;
 
   await models[TABLA.users]
     .findOne({ where: { email: campos.email } })

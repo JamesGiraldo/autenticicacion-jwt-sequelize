@@ -12,13 +12,17 @@ const index = async (req, res = response) => {
   await models[TABLA.users]
     .findAll({
       attributes: { exclude: composNoVisible },
-      include: TABLA.roles,
+      include: {
+        model: models[TABLA.roles],
+        as: TABLA.roles,
+        attributes: { exclude: ["createdAt", "updatedAt"] } 
+      }    
     })
     .then((users) => {
         res.status( HTTP_CODE.SUCCESS ).json( users );
     })
     .catch((err) => {
-      res.status( HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR, err );
+      res.status( HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.INTERNAL_SERVER_ERROR );
     });
 };
 
@@ -42,7 +46,7 @@ const show = async (req, res = response) => {
     })
     .catch((error) => {
       /** Si lapetición esta mal mostrar el error. */
-      res.status( HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR, error );
+      res.status( HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.INTERNAL_SERVER_ERROR );
     });
 };
 
@@ -69,7 +73,7 @@ const update = async (req, res = response) => {
     })
     .catch((error) => {
       /** Si lapetición esta mal mostrar el error. */
-      res.status(HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR, error );
+      res.status(HTTP_CODE.SERVER_ERROR ).json( HTTP_MESSAGE.SERVER_ERROR );
     });
 };
 
@@ -80,7 +84,7 @@ const destroy = async (req, res = response) => {
   const id = req.params.id;
 
   await models[TABLA.users].findByPk( id ).then( async( user ) => {
-    if (post) {
+    if ( user ) {
 
       await user.destroy( { where: { id: user.id } } ).then( result =>  { 
         res.status( HTTP_CODE.SUCCESS ).json( HTTP_MESSAGE.SUCCESS );

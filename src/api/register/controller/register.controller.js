@@ -29,7 +29,9 @@ const signUp = async (req, res = response) => {
             const camposVisibles = {
               id: user.id,
               nombre: user.nombre,
+              apellido: user.apellido,              
               correo: user.email,
+              edad: user.edad,
               creado: user.createdAt,
             };
             /** Generar El TOKEN JWT */
