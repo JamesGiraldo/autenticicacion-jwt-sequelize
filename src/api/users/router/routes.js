@@ -18,7 +18,7 @@ router.put( '/users/:id', checkAuth, update  );
 router.delete( '/users/:id', checkAuth, destroy  );
 
 
-// ruta para la api students 
+// ruta para la api students
 router.get( '/students', checkAuth, students  );
 
 /** exportar el modulo de ruta */

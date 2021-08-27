@@ -25,6 +25,8 @@ route.use( require('../../api/roles/routes/routes') );
 // RUTAS DE USERS( USUARIOS ) 
 route.use( require('../../api/users/router/routes') );
 
+// RUTAS DE BUSQUEDA( TODO ) 
+route.use( require('../../api/buscador/routes/routes') );
 
 /** esportar el modulo routes, para poderlo usar donde sea XD */
 module.exports = route;

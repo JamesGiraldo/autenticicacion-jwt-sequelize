@@ -15,8 +15,8 @@ const index = async (req, res = response) => {
       include: {
         model: models[TABLA.roles],
         as: TABLA.roles,
-        attributes: { exclude: ["createdAt", "updatedAt"] } 
-      }    
+        attributes: { exclude: ["createdAt", "updatedAt"] }
+      }
     })
     .then((users) => {
         res.status( HTTP_CODE.SUCCESS ).json( users );
@@ -61,7 +61,7 @@ const update = async (req, res = response) => {
     .findByPk(id, { attributes: { exclude: composNoVisible } })
     .then( async(user) => {
       if (user) {
-      
+
         await user.update( campos, { where: { id: user.id } } ).then( result =>  { 
           res.status( HTTP_CODE.SUCCESS ).json( user );
         })
@@ -86,7 +86,7 @@ const destroy = async (req, res = response) => {
   await models[TABLA.users].findByPk( id ).then( async( user ) => {
     if ( user ) {
 
-      await user.destroy( { where: { id: user.id } } ).then( result =>  { 
+      await user.destroy( { where: { id: user.id } } ).then( result =>  {
         res.status( HTTP_CODE.SUCCESS ).json( HTTP_MESSAGE.SUCCESS );
       })
 

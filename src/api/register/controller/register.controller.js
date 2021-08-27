@@ -2,7 +2,7 @@ const { response } = require("express");
 const bcrypt = require("bcryptjs");
 
 const models = require("../../../../infrastructure/orm/sequelize/models");
-const { TABLA, MODELS } = require("../../../../config/tablas");
+const { TABLA } = require("../../../../config/tablas");
 
 const { generarJWT } = require("../../../helpers/jwt");
 const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
@@ -10,13 +10,11 @@ const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
 // registro de usuario
 const signUp = async (req, res = response) => {
   /** campos del body  */
-  const campos = ({ nombre, email, password } = req.body);
+  const campos = { nombre, email, password } = req.body;
 
-  await models[TABLA.users]
-    .findOne({ where: { email: campos.email } })
-    .then(async (result) => {
+  await models[TABLA.users].findOne({ where: { email: campos.email } }).then(async (result) => {
       if (result) {
-        return res.status(HTTP_CODE.SUCCESS).json(HTTP_MESSAGE.ALREADY_EXISTS);
+        return res.status(HTTP_CODE.CONFLIT).json(HTTP_MESSAGE.EMAIL_ALREADY_EXISTS);
       } else {
         /** Encriptar password */
         const salt = bcrypt.genSaltSync(10);
@@ -29,7 +27,7 @@ const signUp = async (req, res = response) => {
             const camposVisibles = {
               id: user.id,
               nombre: user.nombre,
-              apellido: user.apellido,              
+              apellido: user.apellido,
               correo: user.email,
               edad: user.edad,
               creado: user.createdAt,
@@ -53,4 +51,4 @@ const signUp = async (req, res = response) => {
 
 module.exports = {
     signUp: signUp
-};  
+};
