@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 const models = require("../../../../infrastructure/orm/sequelize/models");
 const { TABLA } = require("../../../../config/tablas");
-const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
+const { HTTP_CODE, HTTP_MESSAGE, USER_TYPE } = require("../../../../config/constantes");
 
 // campos para que no se vean en respuesta
 const creado = "createdAt";
@@ -51,13 +51,53 @@ const getDocumentoColeccion = async (req, res = response) => {
         /** para selección de casos con el switch case */
         switch (tabla) {
             case TABLA.users:
-                data =  await models[TABLA.users].findAll({ where: { nombre: { [Op.like]: `%${busqueda}%` }}, attributes: { exclude: composNoVisible }});
+                data =  await models[TABLA.users].findAll({
+                    include: {
+                        model: models[TABLA.roles],
+                        as: TABLA.roles,
+                        attributes: { exclude: camposNoVisibleDate }
+                    },
+                    where: {
+                        [Op.or]: [
+                            {nombre: { [Op.like]: `%${busqueda}%` }},
+                            {apellido: { [Op.like]: `%${busqueda}%` }}
+                        ]
+                    },
+                    attributes: { exclude: composNoVisible }
+                });
+                break;
+            case 'estudiantes':
+                data = await models[TABLA.users].findAll({
+                    include: {
+                        model: models[TABLA.roles],
+                        as: TABLA.roles,
+                        attributes: { exclude: camposNoVisibleDate },
+                        where: {
+                          id: USER_TYPE.ESTUDENT,
+                        }
+                    },
+                    where: {
+                        [Op.or]: [
+                            {nombre: { [Op.like]: `%${busqueda}%` }},
+                            {apellido: { [Op.like]: `%${busqueda}%` }}
+                        ]
+                    },
+                    attributes: { exclude: composNoVisible }
+                });
                 break;
             case TABLA.cursos:
                 data = await models[TABLA.cursos].findAll({ where: { nombre: { [Op.like]: `%${busqueda}%` }}, attributes: { exclude: camposNoVisibleDate }});
                 break;
             case TABLA.posts:
-                data = await models[TABLA.posts].findAll({ where: { title: { [Op.like]: `%${busqueda}%` }}, attributes: { exclude: camposNoVisibleDate }});
+                data = await models[TABLA.posts].findAll({
+                    where: {
+                        [Op.or]: [
+                            {title: { [Op.like]: `%${busqueda}%` }},
+                            {cuerpo: { [Op.like]: `%${busqueda}%` }}
+                        ]
+                    },
+                    attributes: { exclude: camposNoVisibleDate }
+                });
                 break;
             /** si es un porible error imprimir este mensaje y no permite continuar gracias al return */
             default:

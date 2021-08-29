@@ -12,8 +12,8 @@ const camposNoVisibleDate = [creado, actualizado];
 
 // GET /api/cursos-estudiantes
 const getCursos = async (req, res = response) => {
-  await models[TABLA.cursos]
-    .findAll({
+  try {
+    const cursos = await models[TABLA.cursos].findAll({
       attributes: { exclude: camposNoVisibleDate },
       include: {
         model: models[TABLA.users],
@@ -21,19 +21,18 @@ const getCursos = async (req, res = response) => {
         attributes: { exclude: composNoVisible },
       }
     })
-    .then((cursos) => {
-      res.status(HTTP_CODE.SUCCESS).json(cursos);
-    })
-    .catch((err) => {
-      res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
-    });
+    res.status(HTTP_CODE.SUCCESS).json(cursos);
+  } catch (error) {
+    res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
+  }
 };
 
 // GET /api/students/:id
 const showCursosEstudent = async (req, res = response) => {
-  /** obtener el valor del id del usuario por los parametros  */
-  const id = req.params.id;
-  await models[TABLA.users].findByPk(id, {
+  try {
+    /** obtener el valor del id del usuario por los parametros  */
+    const id = req.params.id;
+    const user = await models[TABLA.users].findByPk(id, {
       include: {
         model: models[TABLA.roles],
         as: TABLA.roles,
@@ -42,33 +41,38 @@ const showCursosEstudent = async (req, res = response) => {
           id: USER_TYPE.ESTUDENT,
         }
       }
-    }).then(async ( user ) => {
-      await user.getCursos({
-          attributes: { exclude: camposNoVisibleDate },
-        }).then( cursos => {
-          res.status(HTTP_CODE.SUCCESS).json(cursos);
-        })
-    }).catch( err => {
-      res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
-    });
+    })
+    const cursos = await user.getCursos({ attributes: { exclude: camposNoVisibleDate } })
+    res.status(HTTP_CODE.SUCCESS).json(cursos);
+  } catch (error) {
+    res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
+  }
 };
+
+const Newasignacion = async (cuerpo) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await models.sequelize.transaction(async (transaction) => {
+        const asignacion = await models[TABLA.user_curso].create(cuerpo, { transaction });
+        if (!asignacion) return reject(HTTP_MESSAGE.NO_RESULT)
+        resolve(asignacion);
+      });
+    } catch (error) {
+      reject(HTTP_MESSAGE.NOT_FOUND);
+    }
+  });
+}
 
 // CREATE /api/asignaciones-user-curso
 const asignacion = async (req, res = response) => {
-  /** obtener el valor del body  */
-  //  const cuerpo = req.body;
-  const { user_id, curso_id } = req.body;
-
-  await models[TABLA.user_curso]
-    .create({ user_id, curso_id })
-    .then((result) => {
-      res.status(HTTP_CODE.SUCCESS).json(result);
-    })
-    .catch((err) => {
-      res
-        .status(HTTP_CODE.BAD_REQUEST)
-        .json(HTTP_MESSAGE.INTERNAL_SERVER_ERROR);
-    });
+  try {
+    /** obtener el valor del body  */
+    const { user_id, curso_id } = req.body;
+    const result = await Newasignacion( { user_id, curso_id } );
+    res.status(HTTP_CODE.SUCCESS).json(result);
+  } catch (error) {
+    res.status(HTTP_CODE.BAD_REQUEST).json( error );
+  }
 };
 
 module.exports = {
