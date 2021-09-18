@@ -25,6 +25,10 @@ const HTTP_MESSAGE = {
         code: HTTP_CODE.UNAUTHORIZED,
         message: "CREDENTIAL_INCORRECT"
     },
+    ID_NOT_FOUND: {
+        code: HTTP_CODE.NOT_FOUND,
+        message: "ID_NOT_FOUND"
+    },
     INCTIVE_USER: {
         code: HTTP_CODE.FORBIDDEN,
         message: "INCTIVE_USER"

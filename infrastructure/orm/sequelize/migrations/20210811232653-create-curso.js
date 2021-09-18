@@ -19,14 +19,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       fecha_inicio: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       fecha_fin: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       state: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,        
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,

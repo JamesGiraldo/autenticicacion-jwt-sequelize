@@ -4,7 +4,7 @@ const { USER_TYPE: { ADMIN, USER,  ESTUDENT,  TESTER  } } = require("../../../..
 
 /** metodos importados del controller presente */
 const { index, create, show, update, destroy, } = require("../controller/curso.controller");
-const { asignacion, getCursos, showCursosEstudent } = require("../controller/curso-estudiante.controller");
+const { asignacion } = require("../controller/curso-estudiante.controller");
 
 /** valdiacioneciones con el middleware */
 const { checkAuth } = require("../../../middleware/auth");
@@ -26,8 +26,6 @@ router.put("/cursos/:id", [checkAuth, auth( ADMIN, TESTER ), findByPkID], update
 router.delete("/cursos/:id", [checkAuth, auth( ADMIN ), findByPkID], destroy);
 
 router.post("/cursos/asignaciones", [checkAuth ], asignacion);
-router.get("/cursos-estudents", checkAuth, getCursos);
-router.get("/students/:id", checkAuth, showCursosEstudent);
 
 /** exportar el modulo de ruta */
 module.exports = router;

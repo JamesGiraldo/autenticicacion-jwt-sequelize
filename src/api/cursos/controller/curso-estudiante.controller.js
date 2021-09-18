@@ -10,45 +10,6 @@ const actualizado = "updatedAt";
 const composNoVisible = ["password", creado, actualizado];
 const camposNoVisibleDate = [creado, actualizado];
 
-// GET /api/cursos-estudiantes
-const getCursos = async (req, res = response) => {
-  try {
-    const cursos = await models[TABLA.cursos].findAll({
-      attributes: { exclude: camposNoVisibleDate },
-      include: {
-        model: models[TABLA.users],
-        as: TABLA.users,
-        attributes: { exclude: composNoVisible },
-      }
-    })
-    res.status(HTTP_CODE.SUCCESS).json(cursos);
-  } catch (error) {
-    res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
-  }
-};
-
-// GET /api/students/:id
-const showCursosEstudent = async (req, res = response) => {
-  try {
-    /** obtener el valor del id del usuario por los parametros  */
-    const id = req.params.id;
-    const user = await models[TABLA.users].findByPk(id, {
-      include: {
-        model: models[TABLA.roles],
-        as: TABLA.roles,
-        attributes: { exclude: composNoVisible },
-        where: {
-          id: USER_TYPE.ESTUDENT,
-        }
-      }
-    })
-    const cursos = await user.getCursos({ attributes: { exclude: camposNoVisibleDate } })
-    res.status(HTTP_CODE.SUCCESS).json(cursos);
-  } catch (error) {
-    res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
-  }
-};
-
 const Newasignacion = async (cuerpo) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -68,7 +29,21 @@ const asignacion = async (req, res = response) => {
   try {
     /** obtener el valor del body  */
     const { user_id, curso_id } = req.body;
-    const result = await Newasignacion( { user_id, curso_id } );
+    const estudiante = await models[TABLA.users].findByPk( user_id, {
+      attributes: { exclude: composNoVisible },
+      include: {
+        model: models[TABLA.roles],
+        as: TABLA.roles,
+        attributes: { exclude: camposNoVisibleDate },
+        where: {
+          id: USER_TYPE.ESTUDENT,
+        }
+       }
+    })
+    const curso = await models[TABLA.cursos].findByPk( curso_id, { attributes: { exclude: camposNoVisibleDate } })
+    if (!estudiante) return res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.USER_NOT_FOUND_BY_ID)
+    if (!curso) return res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.ID_NOT_FOUND)
+    const result = await Newasignacion({ user_id: estudiante.id, curso_id: curso.id });
     res.status(HTTP_CODE.SUCCESS).json(result);
   } catch (error) {
     res.status(HTTP_CODE.BAD_REQUEST).json( error );
@@ -76,7 +51,5 @@ const asignacion = async (req, res = response) => {
 };
 
 module.exports = {
-  asignacion: asignacion,
-  getCursos: getCursos,
-  showCursosEstudent: showCursosEstudent,
+  asignacion: asignacion
 };

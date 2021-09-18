@@ -49,13 +49,14 @@ const renewToken = async (req, res = response) => {
     /** tomar el uid del usuario */
     const user = req.user;
     /** Generar El TOKEN JWT */
-    const token = await generarJWT(user);
+    const token = await generarJWT( user );
     /** Consultar el usuario por id */
     const usuarioDB = await models[TABLA.users].findByPk(user.id, { attributes: { exclude: composNoVisible } });
     res.json({
       ok: true,
       token: token,
-      usuario: usuarioDB
+      usuario: usuarioDB,
+      roles: user.roles
     });
   } catch (error) {
     res.status(HTTP_CODE.SERVER_ERROR).json(HTTP_MESSAGE.ERROR_SERVER);

@@ -9,12 +9,13 @@ const serve = http.createServer(app);
 
 /** ejecutar servidor en el puerto que esta las variables de entorno */
 serve.listen( process.env.PORT, async () => {
-    /** imprimir respuesta de ejecución del servidor */
-    console.log(`Servidor corriendo en el puerto`.magenta, `http://localhost:${process.env.PORT}`.cyan);
+    try {
+      /** imprimir respuesta de ejecución del servidor */
+      console.log(`Servidor corriendo en el puerto`.magenta, `http://localhost:${process.env.PORT}`.cyan);
 
-    connection.authenticate().then( () => {        
-        console.log(`Conexion a la base de datos exitosa`.yellow);            
-    }).catch( (err) => {
-        console.log(`Error al conectar a la base de datos: `.red );
-    });
+      await connection.authenticate();
+      console.log(`Conexion a la base de datos exitosa`.yellow);
+    } catch ( error ) {
+      console.log(`Error al conectar a la base de datos: `.red );
+    }
 });

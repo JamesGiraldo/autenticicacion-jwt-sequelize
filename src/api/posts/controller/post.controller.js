@@ -16,7 +16,10 @@ const index = async (req, res = response) => {
 
 // GET /api/post/:id
 const show = async (req, res = response) => {
-  res.status(HTTP_CODE.SUCCESS).json(req.post);
+  res.status(HTTP_CODE.SUCCESS).json({
+    ok: true,
+    post: req.post
+  });
 };
 
 const NewPost = async (cuerpo) => {

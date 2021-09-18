@@ -34,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    fecha_inicio: DataTypes.DATE,
-    fecha_fin: DataTypes.DATE,
+    fecha_inicio: DataTypes.DATEONLY,
+    fecha_fin: DataTypes.DATEONLY,
     state: {
       type: DataTypes.BOOLEAN,
       defaultValue: true

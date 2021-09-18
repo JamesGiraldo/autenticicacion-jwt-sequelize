@@ -7,12 +7,20 @@ const { HTTP_MESSAGE, HTTP_CODE } = require("../../../../config/constantes");
 // campos para que no se vean en respuesta
 const creado = "createdAt";
 const actualizado = "updatedAt";
+const composNoVisible = ["password", creado, actualizado];
 const camposNoVisibleDate = [creado, actualizado];
 
 // GET /api/cursos
 const index = async (req, res = response) => {
   try {
-    const cursos = await models[TABLA.cursos].findAll({ attributes: { exclude: camposNoVisibleDate } });
+    const cursos = await models[TABLA.cursos].findAll({
+      attributes: { exclude: camposNoVisibleDate },
+      include: {
+        model: models[TABLA.users],
+        as: TABLA.users,
+        attributes: { exclude: composNoVisible },
+      }
+    });
     res.status(HTTP_CODE.SUCCESS).json(cursos);
   } catch (error) {
     res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
@@ -22,12 +30,8 @@ const index = async (req, res = response) => {
 // GET /api/crusos/:id
 const show = async (req, res = response) => {
   res.status(HTTP_CODE.SUCCESS).json({
-    id: req.curso.id,
-    nombre: req.curso.nombre,
-    horario: req.curso.horario,
-    fecha_inicio: req.curso.fecha_inicio,
-    fecha_fin: req.curso.fecha_fin,
-    estado: req.curso.state
+    ok: true,
+    curso: req.curso
   });
 };
 
@@ -99,7 +103,7 @@ const DestroyCurso = async ( curso, id) => {
   });
 }
 
-// DELEE /api/cursos/:id
+// DELETE /api/cursos/:id
 const destroy = async (req, res = response) => {
   try {
     await DestroyCurso(req.curso, req.curso.id);

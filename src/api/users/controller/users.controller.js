@@ -3,6 +3,7 @@ const { response } = require("express");
 const models = require("../../../../infrastructure/orm/sequelize/models");
 const { TABLA } = require("../../../../config/tablas");
 const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
+const { Op } = require("sequelize");
 
 // campos para que no se vean en respuesta
 const creado = "createdAt";
@@ -18,7 +19,12 @@ const index = async (req, res = response) => {
       include: {
         model: models[TABLA.roles],
         as: TABLA.roles,
-        attributes: { exclude: camposNoVisibleDate }
+        attributes: { exclude: camposNoVisibleDate },
+        // where: {
+        //   id: {
+        //     [ Op.not ]: 3
+        //   }
+        // }
       }
     })
     res.status(HTTP_CODE.SUCCESS).json(users);
@@ -34,7 +40,10 @@ const show = async (req, res = response) => {
     const id = req.params.id;
     const user = await models[TABLA.users].findByPk(id, { attributes: { exclude: composNoVisible }, include: TABLA.roles })
     if (user) {
-      res.status(HTTP_CODE.SUCCESS).json(user);
+      res.status(HTTP_CODE.SUCCESS).json({
+        ok: true,
+        user: user
+      });
     } else {
       /** Si no recibe la respuesta. */
       res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.USER_NOT_FOUND_BY_ID);
@@ -74,11 +83,11 @@ const update = async (req, res = response) => {
       if (user.email !== campos.email) {
         const userEmail = await models[TABLA.users].findOne({ where: { email: campos.email } })
         if (userEmail) {
-          res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.EMAIL_ALREADY_EXISTS);
+          return res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.EMAIL_ALREADY_EXISTS);
         }
       }
       const userNew = await UpdateUser(user, campos, id);
-      res.status(HTTP_CODE.SUCCESS).json(userNew);
+      return res.status(HTTP_CODE.SUCCESS).json(userNew);
     } else {
       /** Si no recibe la respuesta. */
       res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.USER_NOT_FOUND_BY_ID);

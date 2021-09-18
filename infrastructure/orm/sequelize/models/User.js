@@ -22,8 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     nombre: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {       
+      validate: {
         len: {
           args: [ 3, 255 ],
           msg: "El nombre tiene que ser minimo de 3 caracteres."
@@ -32,8 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     apellido: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {       
+      validate: {
         len: {
           args: [ 3, 255 ],
           msg: "El apellido tiene que ser minimo de 3 caracteres."
@@ -42,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     edad: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       validate: {
         isInt: {
           args: false,
@@ -50,20 +47,20 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    email: { 
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
         isEmail: {
           msg: "El email tiene que ser valido."
-        },        
+        },
       }
     },
-    password: { 
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {       
+      validate: {
         len: {
           args: [ 6, 100 ],
           msg: "La contraseña debe tener minimo 6 caracteres."
