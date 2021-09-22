@@ -77,4 +77,5 @@ const DestroyAsignacion = async ( roleUser, id ) => {
 module.exports = {
   asignacion: asignacion,
   // DestroyAsignaciones: DestroyAsignaciones
+  Newasignacion: Newasignacion
 };

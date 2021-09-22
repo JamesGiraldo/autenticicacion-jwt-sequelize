@@ -3,9 +3,10 @@ const bcrypt = require("bcryptjs");
 
 const models = require("../../../../infrastructure/orm/sequelize/models");
 const { TABLA } = require("../../../../config/tablas");
+const { Newasignacion, asignacion } = require('../../roles/controller/Roles-users.controller');
 
 const { generarJWT } = require("../../../helpers/jwt");
-const { HTTP_CODE, HTTP_MESSAGE } = require("../../../../config/constantes");
+const { HTTP_CODE, HTTP_MESSAGE, USER_TYPE } = require("../../../../config/constantes");
 
 const NewUser = async (cuerpo) => {
   return new Promise(async (resolve, reject) => {
@@ -35,6 +36,7 @@ const signUp = async (req, res = response) => {
 
       // POSTS new user
       const user = await NewUser(campos);
+      const asignacionRoleDefault = await Newasignacion({ user_id: user.id, role_id: USER_TYPE.ESTUDENT })
 
       /** Generar El TOKEN JWT */
       const token = await generarJWT(user);
@@ -51,6 +53,7 @@ const signUp = async (req, res = response) => {
         message: "Usuario registrado exitosamente.",
         user: camposVisibles,
         token: token,
+        asignacionRoleDefault: asignacionRoleDefault
       });
     }
   } catch (error) {
