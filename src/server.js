@@ -11,7 +11,7 @@ const serve = http.createServer(app);
 serve.listen( process.env.PORT, async () => {
     try {
       /** imprimir respuesta de ejecución del servidor */
-      console.log(`Servidor corriendo en el puerto`.magenta, `http://localhost:${process.env.PORT}`.cyan);
+      console.log(`Servidor corriendo en el puerto`.magenta, ` ${process.env.DB_HOST}:${process.env.PORT}`.cyan);
 
       await connection.authenticate();
       console.log(`Conexion a la base de datos exitosa`.yellow);

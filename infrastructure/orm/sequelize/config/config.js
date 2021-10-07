@@ -7,7 +7,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: "mysql",
     define: {
-      freezeTableName: true     
+      freezeTableName: true
     }
   },
   test: {
@@ -17,7 +17,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: "mysql",
     define: {
-      freezeTableName: true      
+      freezeTableName: true
     }
   },
   production: {
@@ -27,7 +27,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: "mysql",
     define: {
-      freezeTableName: true      
+      freezeTableName: true
     }
   },
 };
