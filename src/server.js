@@ -2,10 +2,15 @@ require('dotenv').config();
 const colors = require('colors');
 const http = require('http');
 const app = require('./app');
+const { Server } = require("socket.io");
 const { connection } = require('../config/conecction-sequelize');
+const { cors } = require('../config/constantes')
 
 /**   Crear el servidor de express */
 const serve = http.createServer(app);
+
+const io = new Server(serve, { cors: cors });
+require('./api/socket/socket')(io)
 
 /** ejecutar servidor en el puerto que esta las variables de entorno */
 serve.listen( process.env.PORT, async () => {

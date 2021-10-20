@@ -9,6 +9,14 @@ const APIVERSION = {
     v1: "/api/v1",
 };
 
+const cors = {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+}
+
 const HTTP_CODE = {
     UNAUTHORIZED: 401,
     BAD_REQUEST: 400,
@@ -81,8 +89,9 @@ const HTTP_MESSAGE = {
 };
 
 module.exports = {
-    APIVERSION,
     USER_TYPE,
+    APIVERSION,
+    cors,
     HTTP_MESSAGE,
-    HTTP_CODE
+    HTTP_CODE,
 };
