@@ -19,22 +19,16 @@ const checkAuth = async (req, res = response, next) => {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
         /**  enviar mensaje de estado */
-        return res
-          .status(HTTP_CODE.UNAUTHORIZED)
-          .json(HTTP_MESSAGE.TOKEN_INVALID);
+        return res.status(HTTP_CODE.UNAUTHORIZED).json(HTTP_MESSAGE.TOKEN_INVALID);
       } else {
         /**  enviar el token */
-        await models[TABLA.users]
-          .findByPk(decoded.user.id, { include: TABLA.roles })
-          .then((user) => {
-            // console.group( "coje------>" , user.roles )
-            // console.log( decoded.user.nombre , " ---- usuario recibido  -----" , user.roles.get( "id" ) );
-            // const newUser = JSON.parse(JSON.stringify(user, null, 4));
-            // console.log( "ViooO -----> ", newUser.id);
-
-            req.user = user;
-            next();
-          });
+        const user = await models[TABLA.users].findByPk( decoded.user.id, { include: TABLA.roles })
+        // console.group( "coje------>" , user.roles )
+        // console.log( decoded.user.nombre , " ---- usuario recibido  -----" , user.roles.get( "id" ) );
+        // const newUser = JSON.parse(JSON.stringify(user, null, 4));
+        // console.log( "ViooO -----> ", newUser.id);
+        req.user = user;
+        next();
       }
     });
   } catch (error) {

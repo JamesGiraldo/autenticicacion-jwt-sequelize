@@ -1,11 +1,11 @@
 'use strict';
 
-const { TABLA, MODELS }  = require('../../../../config/tablas');
+const { TABLA }  = require('../../../../config/tablas');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-
-    await queryInterface.createTable( TABLA.user_role , {
+    
+    await queryInterface.createTable( TABLA.user_curso , { 
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,15 +18,15 @@ module.exports = {
         references: {
           model: TABLA.users,
           key: 'id'
-        }
+        }    
       },
-      role_id: {
+      curso_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: TABLA.roles,
+          model: TABLA.cursos,
           key: 'id'
-        }
+        }    
       },
       createdAt: {
         allowNull: false,
@@ -36,13 +36,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-
+    });   
   },
 
   down: async (queryInterface, Sequelize) => {
-
-    await queryInterface.dropTable( TABLA.user_role );
-
+    await queryInterface.dropTable( TABLA.user_curso );  
   }
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const { TABLA, MODELS }  = require('../../../../config/tablas');
+const { TABLA }  = require('../../../../config/tablas');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -15,6 +15,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      apellido: {
+        type: Sequelize.STRING,        
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -23,6 +26,9 @@ module.exports = {
         type: Sequelize.STRING,
         unque: true,
         allowNull: false,
+      },
+      edad: {
+        type: Sequelize.INTEGER,       
       },
       createdAt: {
         allowNull: false,

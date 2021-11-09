@@ -3,7 +3,9 @@ const router = Router();
 const { USER_TYPE: { ADMIN, USER,  ESTUDENT,  TESTER  } } = require("../../../../config/constantes");
 
 /** metodos importados del controller presente */
-const { index, create, show, update, destroy, } = require("../controller/post.controller");
+const { index, create, show, update, destroy, } = require("../controller/curso.controller");
+const { asignacion } = require("../controller/curso-estudiante.controller");
+
 /** valdiacioneciones con el middleware */
 const { checkAuth } = require("../../../middleware/auth");
 const { findByPkID } = require("../../../middleware/find");
@@ -11,17 +13,19 @@ const { findByPkID } = require("../../../middleware/find");
 const { auth } = require("../../../policies/Politicas");
 
 /** ruta principal metodo get */
-router.get("/posts", checkAuth, index);
-router.get("/posts/:id", [checkAuth, findByPkID], show);
+router.get("/cursos", checkAuth, index);
+router.get("/cursos/:id", [checkAuth, findByPkID], show);
 
 /** ruta principal metodo post */
-router.post("/posts", [checkAuth, auth( ADMIN, TESTER ) ], create);
+router.post("/cursos", [checkAuth, auth( ADMIN, TESTER ) ], create);
 
 /** ruta principal metodo update */
-router.put("/posts/:id", [checkAuth, auth( ADMIN, TESTER ), findByPkID], update);
+router.put("/cursos/:id", [checkAuth, auth( ADMIN, TESTER ), findByPkID], update);
 
 /** ruta principal metodo delete */
-router.delete("/posts/:id", [checkAuth, auth( ADMIN ), findByPkID], destroy);
+router.delete("/cursos/:id", [checkAuth, auth( ADMIN ), findByPkID], destroy);
+
+router.post("/cursos/asignaciones", [checkAuth ], asignacion);
 
 /** exportar el modulo de ruta */
 module.exports = router;

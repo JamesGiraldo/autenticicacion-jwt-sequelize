@@ -9,6 +9,14 @@ const APIVERSION = {
     v1: "/api/v1",
 };
 
+const cors = {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+}
+
 const HTTP_CODE = {
     UNAUTHORIZED: 401,
     BAD_REQUEST: 400,
@@ -24,6 +32,10 @@ const HTTP_MESSAGE = {
     CREDENTIAL_INCORRECT: {
         code: HTTP_CODE.UNAUTHORIZED,
         message: "CREDENTIAL_INCORRECT"
+    },
+    ID_NOT_FOUND: {
+        code: HTTP_CODE.NOT_FOUND,
+        message: "ID_NOT_FOUND"
     },
     INCTIVE_USER: {
         code: HTTP_CODE.FORBIDDEN,
@@ -77,8 +89,9 @@ const HTTP_MESSAGE = {
 };
 
 module.exports = {
-    APIVERSION,
     USER_TYPE,
+    APIVERSION,
+    cors,
     HTTP_MESSAGE,
-    HTTP_CODE
+    HTTP_CODE,
 };
