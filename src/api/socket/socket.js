@@ -7,4 +7,17 @@ module.exports = (io) => {
         })
     });
 
+    const userNamespace = io.of("/publication");
+    userNamespace.on("connection", (socket) => {
+
+        socket.emit('new-publication-to-client', {
+            message: 'Welcome to the publication room'
+        });
+
+        socket.on('new-publication-to-client', (data) => {
+            console.log(data);
+        });
+
+    });
+
 }
