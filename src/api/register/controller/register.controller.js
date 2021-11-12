@@ -30,6 +30,8 @@ const signUp = async (req, res = response) => {
     if (userEmail) {
       return res.status(HTTP_CODE.CONFLIT).json(HTTP_MESSAGE.EMAIL_ALREADY_EXISTS);
     } else {
+      const io =  req.app.get("io");
+      io.of( `/${TABLA.users}` ).emit("new-user", {});
       /** Encriptar password */
       const salt = bcrypt.genSaltSync(10);
       campos.password = bcrypt.hashSync(password, salt);

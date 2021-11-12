@@ -10,6 +10,7 @@ const { cors } = require('../config/constantes')
 const serve = http.createServer(app);
 
 const io = new Server(serve, { cors: cors });
+app.set('io', io);
 require('./api/socket/socket')(io)
 
 /** ejecutar servidor en el puerto que esta las variables de entorno */

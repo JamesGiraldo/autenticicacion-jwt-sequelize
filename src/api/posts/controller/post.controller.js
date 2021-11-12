@@ -7,8 +7,12 @@ const { HTTP_MESSAGE, HTTP_CODE } = require("../../../../config/constantes");
 // GET /api/posts
 const index = async (req, res = response) => {
   try {
+    const io =  req.app.get("io");
     const posts = await models[TABLA.posts].findAll({ attributes: { exclude: ["createdAt", "updatedAt", "userId", "UserId"] } })
     res.status(HTTP_CODE.SUCCESS).json(posts);
+    // io.of("/posts").on("new-post-to-client", (data) => {
+    //   console.log(data);
+    // });
   } catch (error) {
     res.status(HTTP_CODE.NOT_FOUND).json(HTTP_MESSAGE.NO_RESULT);
   }
@@ -39,6 +43,8 @@ const NewPost = async (cuerpo) => {
 // CREATE /api/posts
 const create = async (req, res = response) => {
   try {
+    const io =  req.app.get("io");
+    io.of( `/${TABLA.posts}` ).emit("new-post", {});
     const cuerpo = { ...req.body };
     const post = await NewPost(cuerpo);
     res.status(HTTP_CODE.SUCCESS).json(post);
@@ -64,10 +70,12 @@ const UpdatePost = async ( publicacion, cuerpo, id) => {
 // UPDATE /api/posts/:id
 const update = async (req, res = response) => {
   try {
+    const io =  req.app.get("io");
     /** obtener el valor del body  */
     const cuerpoUpdate = { ...req.body };
     const id = req.post.id;
     const post = req.post;
+    io.of( `/${TABLA.posts}` ).emit("update-post", HTTP_MESSAGE.SUCCESS);
     const postNew = await UpdatePost(post, cuerpoUpdate, id);
     res.status(HTTP_CODE.SUCCESS).json(postNew);
   } catch (error) {
@@ -92,6 +100,8 @@ const DestroyPost = async ( publicacion, id) => {
 // DELEE /api/posts/:id
 const destroy = async (req, res = response) => {
   try {
+    const io =  req.app.get("io");
+    io.of( `/${TABLA.posts}` ).emit("destroy-post", HTTP_MESSAGE.DELETE_SUCCESS);
     await DestroyPost(req.post, req.post.id);
     res.status(HTTP_CODE.SUCCESS).json(HTTP_MESSAGE.SUCCESS);
   } catch (error) {
